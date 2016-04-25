@@ -40,5 +40,8 @@
     <Text Include="trainingData.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="trainResult.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

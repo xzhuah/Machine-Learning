@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="trainingData.txt" />
+    <Text Include="trainResult.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8C381CD4-1F46-415C-B8E7-3EF34A9E02A1}</ProjectGuid>

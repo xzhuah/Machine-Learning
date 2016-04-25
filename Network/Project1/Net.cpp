@@ -4,6 +4,8 @@
 #include <stdio.h>     
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
+#include <sstream>
 // constructor.
 	// topology is a container representing net structure.
 	//   e.g. {2, 4, 1} represents 2 neurons for the first layer, 4 for the second layer, 1 for last layer
@@ -28,10 +30,62 @@ Net::Net(const std::vector<unsigned> &topology, const double eta){
 	for (int i = 0; i < currentOutput.size(); i++) {
 		currentOutput[i].resize(this->network[i].size());
 	}
-}
 
+	
+}
+Net::Net(const char inputFile[], const double eta) {
+	learningRate = eta;
+	std::ifstream networkInput;
+	std::vector<unsigned> Unitnum;
+	networkInput.open(inputFile);
+	std::string line;
+	std::string label;
+	getline(networkInput, line);
+	std::stringstream ss(line);
+	
+	unsigned Unitnumber = 0;
+	// First line define the structure of the network 2 3 4 (two input three hiddden four output)
+	while (!ss.eof()) {
+		unsigned n;
+		ss >> n;
+		Unitnumber += n;
+		Unitnum.push_back(n);
+	}
+
+	for (int i = 0; i < Unitnum.size(); i++) {
+		vector<Unit> layer;
+		for (int j = 0; j < Unitnum[i]; j++) {
+
+			getline(networkInput, line);
+			
+			if (line == "") break;
+			std::stringstream ss(line);
+			vector<double> weightReader;
+			double oneValue;
+			while (ss >> oneValue) {
+				weightReader.push_back(oneValue);
+			}
+			Unit u(weightReader);
+			layer.push_back(u);
+		}
+	
+		if(layer.size()!=0) this->network.push_back(layer);
+		
+
+	}
+	networkInput.close();
+	currentOutput.resize(this->network.size());
+	for (int i = 0; i < currentOutput.size(); i++) {
+		currentOutput[i].resize(this->network[i].size());
+	}
+
+	
+	
+
+}
 // given an input sample inputVals, propagate input forward, compute the output of each neuron
 void Net::feedForward(const std::vector<double> &inputVals){
+	
 	for (int i = 0; i < currentOutput[0].size(); i++) {
 		currentOutput[0][i] = this->network[0][i].getOutput(inputVals[i]);//for input unit, simply output the result
 	}
@@ -101,6 +155,7 @@ void Net::backProp(const std::vector<double> &targetVals){
 
 // output the prediction for the current sample to the vector resultVals
 void Net::getResults(std::vector<double> &resultVals) const{
+	
 	resultVals = currentOutput[currentOutput.size() - 1];
 }
 
@@ -113,4 +168,23 @@ double Net::getError(void) const{
 		result += 0.5*(differ*differ);
 	}
 	return result;
+}
+
+void Net::saveStateToFile(const char file[]){
+	ofstream out(file);
+	for (int i = 0; i < this->network.size(); i++) {
+		out << (this->network[i].size())<<" ";
+	}
+	out << endl;
+	for (int i = 0; i < this->network.size(); i++) {
+		for (int j = 0; j < this->network[i].size(); j++) {
+			vector<double> weights = this->network[i][j].getWeights();
+			
+			for (int k = 0; k < weights.size(); k++) {
+				out << (weights[k]) << " ";
+			}
+			out << endl;
+			
+		}
+	}
 }

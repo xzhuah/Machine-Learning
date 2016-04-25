@@ -28,6 +28,16 @@ public:
 			this->weights[i] = (((double)rand() / RAND_MAX) -0.5)*10;
 		}
 	}
+
+	Unit(vector<double> weight) {
+
+		this->weights.resize(weight.size());//set to random small number
+		for (unsigned i = 0; i < weight.size(); i++) {
+			//this->weights[i] = ((double)rand() / RAND_MAX)*((double)rand() / RAND_MAX)*10.0;
+			//this->weights[i] =(rand()%10000-500)/10000.0;
+			this->weights[i] = weight[i];
+		}
+	}
 	
 
 

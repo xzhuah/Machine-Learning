@@ -21,6 +21,8 @@ public:
 	// eta: learning rate 
 	Net(const std::vector<unsigned> &topology, const double eta);
 
+	Net(const char inputFile[], const double eta);
+
 	// given an input sample inputVals, propagate input forward, compute the output of each neuron 
 	void feedForward(const std::vector<double> &inputVals);
 
@@ -32,6 +34,8 @@ public:
 
 	// return the error of the current sample
 	double getError(void) const;
+
+	void saveStateToFile(const char[]) ;
 
 	
 	/*
